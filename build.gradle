@@ -1,0 +1,71 @@
+import org.apache.tools.ant.filters.ReplaceTokens
+apply plugin: 'java-library'
+apply plugin: 'eclipse'
+
+
+group = 'me.limeglass.skore'
+version = '1.0.0'
+
+sourceCompatibility = 1.8
+jar.archiveName = project.name + '.jar'
+
+configurations {
+    shade
+    compile.extendsFrom shade
+}
+
+repositories {
+    mavenCentral()
+    jcenter()
+    
+    //Spigot
+    maven {
+        url 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/'
+    }
+    
+    //Skript
+    maven {
+        url "https://raw.githubusercontent.com/bensku/mvn-repo/master"
+    }
+    
+    //Bungeecord
+    maven {
+        url "https://oss.sonatype.org/content/repositories/snapshots"
+    }
+    
+    //TitleManager because i'm lazy
+    maven {
+        url "http://repo.puha.io/repo/"
+    }
+}
+
+dependencies {
+	
+	//Nullable annotation
+	implementation (group: 'org.eclipse.jdt', name: 'org.eclipse.jdt.annotation', version: '1.1.0')
+	
+	//Spigot/Bukkit
+	implementation (group: 'org.spigotmc', name: 'spigot-api', version: '1.12.2-R0.1-SNAPSHOT')
+	
+	//Skript
+    implementation (group: 'ch.njol', name: 'skript', version: '2.2-dev35b') {
+        transitive = false
+	}
+	
+	implementation (group: 'io.puharesource.mc', name: 'TitleManager', version: '2.0.0')
+}
+
+processResources {
+    from(sourceSets.main.resources.srcDirs) {
+        include '**/*.yml'
+    }
+}
+
+jar {
+    configurations.shade.each { dep ->
+        from(project.zipTree(dep)){
+            exclude 'META-INF', 'META-INF/**'
+            exclude '**/*.yml'
+        }
+    }
+}
