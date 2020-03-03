@@ -2,11 +2,12 @@ package me.limeglass.skore.elements.expressions;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
+
 import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Name;
-import io.puharesource.mc.titlemanager.APIProvider;
 import io.puharesource.mc.titlemanager.api.v2.TitleManagerAPI;
+import me.limeglass.skore.Skore;
 import me.limeglass.skore.lang.SkorePropertyExpression;
 import me.limeglass.skore.utils.annotations.Changers;
 import me.limeglass.skore.utils.annotations.Properties;
@@ -21,7 +22,7 @@ import me.limeglass.skore.utils.annotations.Settable;
 @Settable(String.class)
 public class ExprValue extends SkorePropertyExpression<Player, String> {
 
-	private TitleManagerAPI api = APIProvider.INSTANCE;
+	private TitleManagerAPI api = Skore.getTitleManagerAPI();
 	
 	@Override
 	protected String[] get(Event event, Player[] players) {
