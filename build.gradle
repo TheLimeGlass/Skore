@@ -49,7 +49,7 @@ dependencies {
 		transitive = false
 	}
 
-	implementation (group: 'io.puharesource.mc', name: 'TitleManager', version: '2.0.0')
+	implementation (group: 'io.puharesource.mc', name: 'TitleManager', version: '2.2.0')
 
 	shade (group: 'org.json', name: 'json', version: '20190722')
 

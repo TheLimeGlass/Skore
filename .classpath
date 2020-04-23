@@ -2,7 +2,69 @@
 <classpath>
 	<classpathentry kind="src" path="src/main/java"/>
 	<classpathentry kind="src" path="src/main/resources"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8/"/>
 	<classpathentry kind="con" path="org.eclipse.buildship.core.gradleclasspathcontainer"/>
-	<classpathentry kind="output" path="bin"/>
+	<classpathentry kind="output" path="bin/default"/>
+	<classpathentry output="bin/main" kind="src" path="src/main/java">
+		<attributes>
+			<attribute name="gradle_scope" value="main"/>
+			<attribute name="gradle_used_by_scope" value="main,test"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry output="bin/main" kind="src" path="src/main/resources">
+		<attributes>
+			<attribute name="gradle_scope" value="main"/>
+			<attribute name="gradle_used_by_scope" value="main,test"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8/"/>
+	<classpathentry sourcepath="C:/Users/Sean Grover/.gradle/caches/modules-2/files-2.1/org.eclipse.jdt/org.eclipse.jdt.annotation/1.1.0/aaab664d7d6c398ba78864495fbaefd32c68e401/org.eclipse.jdt.annotation-1.1.0-sources.jar" kind="lib" path="C:/Users/Sean Grover/.gradle/caches/modules-2/files-2.1/org.eclipse.jdt/org.eclipse.jdt.annotation/1.1.0/c154cecefedc3a8f2a2752db856d8a251ecb49c9/org.eclipse.jdt.annotation-1.1.0.jar">
+		<attributes>
+			<attribute name="gradle_used_by_scope" value="main,test"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry sourcepath="C:/Users/Sean Grover/.gradle/caches/modules-2/files-2.1/org.spigotmc/spigot-api/1.15.2-R0.1-SNAPSHOT/203353f5430c1644d6885c9d173723fb0d848d9f/spigot-api-1.15.2-R0.1-SNAPSHOT-sources.jar" kind="lib" path="C:/Users/Sean Grover/.gradle/caches/modules-2/files-2.1/org.spigotmc/spigot-api/1.15.2-R0.1-SNAPSHOT/5e00c3176f4df93c4825deb3ad7a71b028132ffd/spigot-api-1.15.2-R0.1-SNAPSHOT.jar">
+		<attributes>
+			<attribute name="gradle_used_by_scope" value="main,test"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry sourcepath="C:/Users/Sean Grover/.gradle/caches/modules-2/files-2.1/com.github.SkriptLang/Skript/2.4.1/33707936a3387670020ae0a7af9bfb63433cc03/Skript-2.4.1-sources.jar" kind="lib" path="C:/Users/Sean Grover/.gradle/caches/modules-2/files-2.1/com.github.SkriptLang/Skript/2.4.1/3d5418be937782dfcbadd3dbff6dd55098c99b5e/Skript-2.4.1.jar">
+		<attributes>
+			<attribute name="gradle_used_by_scope" value="main,test"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/Users/Sean Grover/.gradle/caches/modules-2/files-2.1/io.puharesource.mc/TitleManager/2.2.0/94b4bde9d304adb99c0f0e0579e70b7bf931605/TitleManager-2.2.0.jar">
+		<attributes>
+			<attribute name="gradle_used_by_scope" value="main,test"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry sourcepath="C:/Users/Sean Grover/.gradle/caches/modules-2/files-2.1/org.json/json/20190722/6c40df0d93d36cdfc0fbf08e4e3b27eaa1208199/json-20190722-sources.jar" kind="lib" path="C:/Users/Sean Grover/.gradle/caches/modules-2/files-2.1/org.json/json/20190722/7bce7bacf0ab5e9f894d307a3de8b7f540064d5/json-20190722.jar">
+		<attributes>
+			<attribute name="gradle_used_by_scope" value="main,test"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry sourcepath="C:/Users/Sean Grover/.gradle/caches/modules-2/files-2.1/commons-lang/commons-lang/2.6/67313d715fbf0ea4fd0bdb69217fb77f807a8ce5/commons-lang-2.6-sources.jar" kind="lib" path="C:/Users/Sean Grover/.gradle/caches/modules-2/files-2.1/commons-lang/commons-lang/2.6/ce1edb914c94ebc388f086c6827e8bdeec71ac2/commons-lang-2.6.jar">
+		<attributes>
+			<attribute name="gradle_used_by_scope" value="main,test"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry sourcepath="C:/Users/Sean Grover/.gradle/caches/modules-2/files-2.1/net.md-5/bungeecord-chat/1.15-SNAPSHOT/829209000d3d209d2edb977c11272a60f58b01da/bungeecord-chat-1.15-SNAPSHOT-sources.jar" kind="lib" path="C:/Users/Sean Grover/.gradle/caches/modules-2/files-2.1/net.md-5/bungeecord-chat/1.15-SNAPSHOT/8dbb5beecf6b8faae173fcc3df040c80456cb94e/bungeecord-chat-1.15-SNAPSHOT.jar">
+		<attributes>
+			<attribute name="gradle_used_by_scope" value="main,test"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry sourcepath="C:/Users/Sean Grover/.gradle/caches/modules-2/files-2.1/com.google.guava/guava/21.0/b9ed26b8c23fe7cd3e6b463b34e54e5c6d9536d5/guava-21.0-sources.jar" kind="lib" path="C:/Users/Sean Grover/.gradle/caches/modules-2/files-2.1/com.google.guava/guava/21.0/3a3d111be1be1b745edfa7d91678a12d7ed38709/guava-21.0.jar">
+		<attributes>
+			<attribute name="gradle_used_by_scope" value="main,test"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry sourcepath="C:/Users/Sean Grover/.gradle/caches/modules-2/files-2.1/com.google.code.gson/gson/2.8.0/baf95d8519fc1a11d388f8543cb40cd2bb9d66dc/gson-2.8.0-sources.jar" kind="lib" path="C:/Users/Sean Grover/.gradle/caches/modules-2/files-2.1/com.google.code.gson/gson/2.8.0/c4ba5371a29ac9b2ad6129b1d39ea38750043eff/gson-2.8.0.jar">
+		<attributes>
+			<attribute name="gradle_used_by_scope" value="main,test"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry sourcepath="C:/Users/Sean Grover/.gradle/caches/modules-2/files-2.1/org.yaml/snakeyaml/1.25/45379604b7a254120101009ba09537737daed6f/snakeyaml-1.25-sources.jar" kind="lib" path="C:/Users/Sean Grover/.gradle/caches/modules-2/files-2.1/org.yaml/snakeyaml/1.25/8b6e01ef661d8378ae6dd7b511a7f2a33fae1421/snakeyaml-1.25.jar">
+		<attributes>
+			<attribute name="gradle_used_by_scope" value="main,test"/>
+		</attributes>
+	</classpathentry>
 </classpath>

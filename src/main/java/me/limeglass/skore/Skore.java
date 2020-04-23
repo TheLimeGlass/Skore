@@ -21,7 +21,7 @@ import me.limeglass.skore.utils.Utils;
 import net.md_5.bungee.api.ChatColor;
 
 public class Skore extends JavaPlugin {
-	
+
 	private static Map<String, FileConfiguration> files = new HashMap<String, FileConfiguration>();
 	private String packageName = "me.limeglass.skore";
 	private static String prefix = "&8[&6Skore&8] &e";
@@ -30,8 +30,8 @@ public class Skore extends JavaPlugin {
 	private static Skore instance;
 	private SkriptAddon addon;
 	private Metrics metrics;
-	
-	public void onEnable(){
+
+	public void onEnable() {
 		addon = Skript.registerAddon(this);
 		instance = this;
 		saveDefaultConfig();

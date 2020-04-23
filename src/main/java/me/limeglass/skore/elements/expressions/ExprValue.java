@@ -41,7 +41,7 @@ public class ExprValue extends SkorePropertyExpression<Player, String> {
 		for (Player player : expressions.getAll(event, Player.class)) {
 			for (Number slot : expressions.getAll(event, Number.class)) {
 				if (mode == ChangeMode.SET) {
-					api.setScoreboardValueWithPlaceholders(player, slot.intValue(), (String)delta[0]);
+					api.setProcessedScoreboardValue(player, slot.intValue(), (String)delta[0]);
 				} else {
 					api.removeScoreboardValue(player, slot.intValue());
 				}

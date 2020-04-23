@@ -37,9 +37,9 @@ public class ExprTitle extends SkorePropertyExpression<Player, String> {
 		if (isNull(event) || delta == null) return;
 		for (Player player : expressions.getAll(event, Player.class)) {
 			if (mode == ChangeMode.SET) {
-				api.setScoreboardTitleWithPlaceholders(player, (String) delta[0]);
+				api.setProcessedScoreboardTitle(player, (String) delta[0]);
 			} else {
-				api.setScoreboardTitleWithPlaceholders(player, player.getDisplayName());
+				api.setProcessedScoreboardTitle(player, player.getDisplayName());
 			}
 		}
 	}
