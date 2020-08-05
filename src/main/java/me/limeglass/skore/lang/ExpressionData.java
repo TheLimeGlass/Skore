@@ -96,7 +96,8 @@ public class ExpressionData {
 	*/
 	@Nullable
 	public Expression<?> get(int index) {
-		if (index > expressions.length) return null;
+		if (index >= expressions.length)
+			return null;
 		return expressions[index];
 	}
 	
@@ -361,5 +362,4 @@ public class ExpressionData {
 	public String getPattern() {
 		return pattern;
 	}
-
 }

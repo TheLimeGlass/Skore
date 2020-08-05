@@ -3,9 +3,11 @@ package me.limeglass.skore.elements.expressions;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 
+import ch.njol.skript.Skript;
 import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Name;
+import ch.njol.skript.log.ErrorQuality;
 import io.puharesource.mc.titlemanager.api.v2.TitleManagerAPI;
 import me.limeglass.skore.Skore;
 import me.limeglass.skore.lang.SkorePropertyExpression;
@@ -34,16 +36,22 @@ public class ExprValue extends SkorePropertyExpression<Player, String> {
 		}
 		return collection.toArray(new String[collection.size()]);
 	}
-	
+
 	@Override
 	public void change(Event event, Object[] delta, ChangeMode mode) {
-		if (isNull(event) || delta == null) return;
+		if (isNull(event) || delta == null)
+			return;
 		for (Player player : expressions.getAll(event, Player.class)) {
-			for (Number slot : expressions.getAll(event, Number.class)) {
+			for (Number value : expressions.getAll(event, Number.class)) {
+				int slot = value.intValue();
+				if (slot > 15 || slot < 1) {
+					Skript.error("Index needs to be in the range of 1 to 15 (1 and 15 inclusive) in the skoreboard value/slot syntax. Index provided: " + slot, ErrorQuality.SEMANTIC_ERROR);
+					continue;
+				}
 				if (mode == ChangeMode.SET) {
-					api.setProcessedScoreboardValue(player, slot.intValue(), (String)delta[0]);
+					api.setProcessedScoreboardValue(player, slot, (String)delta[0]);
 				} else {
-					api.removeScoreboardValue(player, slot.intValue());
+					api.removeScoreboardValue(player, slot);
 				}
 			}
 		}
