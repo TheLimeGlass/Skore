@@ -1,5 +1,4 @@
 package me.limeglass.skore.utils;
-// Your plugin package, like "fr.myplugin.utils;"
 
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolLibrary;
