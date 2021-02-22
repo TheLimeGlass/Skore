@@ -2,9 +2,6 @@ import org.apache.tools.ant.filters.ReplaceTokens
 apply plugin: 'java-library'
 apply plugin: 'eclipse'
 
-sourceCompatibility = 1.8
-jar.archiveName = project.name + '.jar'
-
 configurations {
 	shade
 	compile.extendsFrom shade
@@ -31,7 +28,7 @@ repositories {
 	
 	// ProtocolLib
 	maven {
-		url "http://repo.dmulloy2.net/nexus/repository/public"
+		url "https://repo.dmulloy2.net/nexus/repository/public"
 	}
 
 }

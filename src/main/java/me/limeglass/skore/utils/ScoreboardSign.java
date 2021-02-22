@@ -1,4 +1,5 @@
 package me.limeglass.skore.utils;
+// Your plugin package, like "fr.myplugin.utils;"
 
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolLibrary;
@@ -49,6 +50,10 @@ public class ScoreboardSign {
 		return player;
 	}
 
+	public String getObjectiveName() {
+		return objectiveName;
+	}
+
 	private void sendPacket(final PacketContainer pc) {
 		try {
 			pm.sendServerPacket(player, pc);
@@ -70,10 +75,6 @@ public class ScoreboardSign {
 			sendLine(i);
 
 		created = true;
-	}
-
-	public String getObjectiveName() {
-		return objectiveName;
 	}
 
 	/**
@@ -291,7 +292,6 @@ public class ScoreboardSign {
 		private static final WrappedChatComponent emptyWrappedChatComponent = WrappedChatComponent.fromText("");
 
 		private PacketContainer createPacket(final int mode) {
-
 			final PacketContainer pc = pm.createPacket(PacketType.Play.Server.SCOREBOARD_TEAM, true);
 
 			pc.getStrings().write(0, name).write(1, "always");

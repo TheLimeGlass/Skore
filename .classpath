@@ -27,7 +27,7 @@
 			<attribute name="gradle_used_by_scope" value="main,test"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry sourcepath="C:/Users/Sean Grover/.gradle/caches/modules-2/files-2.1/com.github.SkriptLang/Skript/2.4.1/33707936a3387670020ae0a7af9bfb63433cc03/Skript-2.4.1-sources.jar" kind="lib" path="C:/Users/Sean Grover/.gradle/caches/modules-2/files-2.1/com.github.SkriptLang/Skript/2.4.1/3d5418be937782dfcbadd3dbff6dd55098c99b5e/Skript-2.4.1.jar">
+	<classpathentry sourcepath="C:/Users/Sean Grover/.gradle/caches/modules-2/files-2.1/com.github.SkriptLang/skript/2.4.1/938b97287c446db244b5fbd8f61bd1528030d912/skript-2.4.1-sources.jar" kind="lib" path="C:/Users/Sean Grover/.gradle/caches/modules-2/files-2.1/com.github.SkriptLang/skript/2.4.1/db4ddccab93588d805233fb0ea9f47af3cb8a9f3/skript-2.4.1.jar">
 		<attributes>
 			<attribute name="gradle_used_by_scope" value="main,test"/>
 		</attributes>
