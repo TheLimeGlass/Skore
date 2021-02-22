@@ -13,6 +13,8 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.eclipse.jdt.annotation.Nullable;
 
+import com.comphenix.protocol.utility.MinecraftVersion;
+
 import ch.njol.skript.Skript;
 import ch.njol.skript.SkriptAddon;
 import me.limeglass.skore.elements.Register;
@@ -31,6 +33,11 @@ public class Skore extends JavaPlugin {
 	private Metrics metrics;
 
 	public void onEnable() {
+		if (!MinecraftVersion.atOrAbove(MinecraftVersion.AQUATIC_UPDATE)) {
+			getPluginLoader().disablePlugin(this);
+			Bukkit.getLogger().info(nameplate + " version 2.0.0+ of Skore will only run on 1.13+ currently. Please update your server or use the older 1.X Skore series.");
+			return;
+		}
 		addon = Skript.registerAddon(this);
 		instance = this;
 		saveDefaultConfig();
