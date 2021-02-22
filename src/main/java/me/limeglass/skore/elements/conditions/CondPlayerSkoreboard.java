@@ -5,8 +5,8 @@ import org.bukkit.event.Event;
 
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Name;
-import me.limeglass.skore.Skore;
 import me.limeglass.skore.lang.SkoreCondition;
+import me.limeglass.skore.utils.ScoreboardManager;
 import me.limeglass.skore.utils.annotations.Patterns;
 
 @Name("Skoreboard - Player has Skoreboard")
@@ -15,8 +15,10 @@ import me.limeglass.skore.utils.annotations.Patterns;
 public class CondPlayerSkoreboard extends SkoreCondition {
 
 	public boolean check(Event event) {
-		if (areNull(event)) return !isNegated();
+		if (areNull(event))
+			return !isNegated();
 		Player player = expressions.getSingle(event, Player.class);
-		return Skore.getTitleManagerAPI().hasScoreboard(player) ? isNegated() : !isNegated();
+		return ScoreboardManager.getScoreboard(player).isPresent() ? isNegated() : !isNegated();
 	}
+
 }

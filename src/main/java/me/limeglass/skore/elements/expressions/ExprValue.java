@@ -1,5 +1,7 @@
 package me.limeglass.skore.elements.expressions;
 
+import java.util.Optional;
+
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 
@@ -8,9 +10,9 @@ import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.log.ErrorQuality;
-import io.puharesource.mc.titlemanager.api.v2.TitleManagerAPI;
-import me.limeglass.skore.Skore;
 import me.limeglass.skore.lang.SkorePropertyExpression;
+import me.limeglass.skore.utils.ScoreboardManager;
+import me.limeglass.skore.utils.ScoreboardSign;
 import me.limeglass.skore.utils.annotations.Changers;
 import me.limeglass.skore.utils.annotations.Properties;
 import me.limeglass.skore.utils.annotations.PropertiesAddition;
@@ -23,15 +25,14 @@ import me.limeglass.skore.utils.annotations.Settable;
 @Changers({ChangeMode.SET, ChangeMode.DELETE, ChangeMode.RESET})
 @Settable(String.class)
 public class ExprValue extends SkorePropertyExpression<Player, String> {
-
-	private TitleManagerAPI api = Skore.getTitleManagerAPI();
 	
 	@Override
 	protected String[] get(Event event, Player[] players) {
-		if (isNull(event)) return null;
+		if (isNull(event))
+			return null;
 		for (Player player : players) {
 			for (Number slot : expressions.getAll(event, Number.class)) {
-				collection.add(api.getScoreboardValue(player, slot.intValue()));
+				collection.add(ScoreboardManager.getScoreboard(player).get().getLine(slot.intValue()));
 			}
 		}
 		return collection.toArray(new String[collection.size()]);
@@ -49,9 +50,13 @@ public class ExprValue extends SkorePropertyExpression<Player, String> {
 					continue;
 				}
 				if (mode == ChangeMode.SET) {
-					api.setProcessedScoreboardValue(player, slot, (String)delta[0]);
+					Optional<ScoreboardSign> scoreboard = ScoreboardManager.getScoreboard(player);
+					if (scoreboard.isPresent())
+						scoreboard.get().setLine(slot, (String)delta[0]);
 				} else {
-					api.removeScoreboardValue(player, slot);
+					Optional<ScoreboardSign> scoreboard = ScoreboardManager.getScoreboard(player);
+					if (scoreboard.isPresent())
+						scoreboard.get().removeLine(slot);
 				}
 			}
 		}

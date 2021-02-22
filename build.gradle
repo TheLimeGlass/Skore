@@ -29,9 +29,9 @@ repositories {
 		url "https://oss.sonatype.org/content/repositories/snapshots"
 	}
 	
-	// TitleManager
+	// ProtocolLib
 	maven {
-		url "http://repo.puha.io/repo/"
+		url "http://repo.dmulloy2.net/nexus/repository/public"
 	}
 
 }
@@ -49,7 +49,7 @@ dependencies {
 		transitive = false
 	}
 
-	implementation (group: 'io.puharesource.mc', name: 'TitleManager', version: '2.2.0')
+	implementation (group: "com.comphenix.protocol", name: "ProtocolLib", version: "4.4.0");
 
 	shade (group: 'org.json', name: 'json', version: '20190722')
 

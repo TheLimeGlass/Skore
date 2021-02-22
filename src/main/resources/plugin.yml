@@ -4,4 +4,4 @@ description: A Skript addon dedicated to perfecting scoreboards.
 api-version: 1.13
 version: @version@
 main: me.limeglass.skore.Skore
-depend: [Skript, TitleManager]
+depend: [Skript, ProtocolLib]

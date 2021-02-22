@@ -15,8 +15,8 @@ import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.SkriptAddon;
-import io.puharesource.mc.titlemanager.api.v2.TitleManagerAPI;
 import me.limeglass.skore.elements.Register;
+import me.limeglass.skore.utils.ScoreboardManager;
 import me.limeglass.skore.utils.Utils;
 import net.md_5.bungee.api.ChatColor;
 
@@ -26,7 +26,6 @@ public class Skore extends JavaPlugin {
 	private String packageName = "me.limeglass.skore";
 	private static String prefix = "&8[&6Skore&8] &e";
 	private static String nameplate = "[Skore] ";
-	private static TitleManagerAPI api;
 	private static Skore instance;
 	private SkriptAddon addon;
 	private Metrics metrics;
@@ -54,45 +53,41 @@ public class Skore extends JavaPlugin {
 			}
 			files.put(name, configuration);
 		}
-		api = (TitleManagerAPI) Bukkit.getServer().getPluginManager().getPlugin("TitleManager");
+		Bukkit.getPluginManager().registerEvents(new ScoreboardManager(), this);
 		metrics = new Metrics(this);
 		Register.metrics(metrics);
 		if (!getConfig().getBoolean("DisableRegisteredInfo", false)) Bukkit.getLogger().info(nameplate + "has been enabled!");
 	}
-	
-	public static TitleManagerAPI getTitleManagerAPI() {
-		return api;
-	}
-	
+
 	public SkriptAddon getAddonInstance() {
 		return addon;
 	}
-	
+
 	public static String getNameplate() {
 		return nameplate;
 	}
-	
+
 	public static Skore getInstance() {
 		return instance;
 	}
-	
+
 	public static String getPrefix() {
 		return prefix;
 	}
-	
+
 	public String getPackageName() {
 		return packageName;
 	}
-	
+
 	public Metrics getMetrics() {
 		return metrics;
 	}
-	
+
 	//Grabs a FileConfiguration of a defined name. The name can't contain .yml in it.
 	public FileConfiguration getConfiguration(String file) {
 		return (files.containsKey(file)) ? files.get(file) : null;
 	}
-	
+
 	public static void save(String configuration) {
 		try {
 			File configurationFile = new File(instance.getDataFolder(), configuration + ".yml");
@@ -101,13 +96,13 @@ public class Skore extends JavaPlugin {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public static void debugMessage(@Nullable String... messages) {
 		if (instance.getConfig().getBoolean("debug")) {
 			for (String text : messages) consoleMessage("&b" + text);
 		}
 	}
-	
+
 	public static void infoMessage(@Nullable String... messages) {
 		if (messages != null && messages.length > 0) {
 			for (String text : messages) Bukkit.getLogger().info(getNameplate() + text);

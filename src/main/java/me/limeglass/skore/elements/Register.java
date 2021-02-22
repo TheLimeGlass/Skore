@@ -20,7 +20,6 @@ public class Register {
 	
 	static {
 		run : for (Class clazz : ReflectionUtil.getClasses(Skore.getInstance(), Skore.getInstance().getPackageName())) {
-			if (clazz.getName().contains("serverinstances") && !Skore.getInstance().getConfiguration("config").getBoolean("ServerInstances", false)) continue run;
 			if (!clazz.isAnnotationPresent(Disabled.class)) {
 				String[] syntax = null;
 				ExpressionType type = ExpressionType.COMBINED;
