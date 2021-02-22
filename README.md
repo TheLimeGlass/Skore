@@ -1,10 +1,7 @@
 # Skore
 A Skript addon dedicated to perfecting scoreboards.
 
-Requires TitleManager currently: https://www.spigotmc.org/resources/titlemanager.1049/
-Until 1.13 Skript comes out and I make my own Packet Handling system for Scoreboards.
-
-Set `use-config` to false in the TitleManager configurations to be able to fully utilize TitleManager and Skore's syntax.
+Requires ProtocolLib https://www.spigotmc.org/resources/protocollib.1997/
 
 Example:
 ```
