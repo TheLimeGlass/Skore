@@ -49,6 +49,7 @@ public class ExprValue extends SkorePropertyExpression<Player, String> {
 					Skript.error("Index needs to be in the range of 1 to 15 (1 and 15 inclusive) in the skoreboard value/slot syntax. Index provided: " + slot, ErrorQuality.SEMANTIC_ERROR);
 					continue;
 				}
+				slot--;
 				if (mode == ChangeMode.SET) {
 					Optional<ScoreboardSign> scoreboard = ScoreboardManager.getScoreboard(player);
 					if (scoreboard.isPresent())

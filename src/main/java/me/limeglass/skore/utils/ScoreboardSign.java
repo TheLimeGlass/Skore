@@ -7,6 +7,10 @@ import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.wrappers.EnumWrappers;
 import com.comphenix.protocol.wrappers.WrappedChatComponent;
 import com.google.common.collect.Lists;
+
+import me.limeglass.skore.Skore;
+import net.md_5.bungee.api.ChatColor;
+
 import org.bukkit.entity.Player;
 
 import java.lang.reflect.InvocationTargetException;
@@ -14,20 +18,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-/**
- * @author zyuiop
- * <p>
- * Updated by Weiiswurst on 21/05/2020 to use the ProtocolLib API
- * instead of reflection, which allows cross-version compatibility.
- * <p>
- * Updated by Giovanni75 on 10/07/2020 for some code cleanup.
- * Reviewed and shared to Spigot by Aurelien30000 on 10/07/2020.
- * 1.8 - 1.12.2 Support dropped to make this library working with 1.13.2+, by Aurelien30000 on 27/08/2020.
- */
 public class ScoreboardSign {
 
 	private static final ProtocolManager pm = ProtocolLibrary.getProtocolManager();
 
+	private final static boolean limit = Skore.getInstance().getConfig().getBoolean("Limit", false);
 	private final Player player;
 	private String objectiveName;
 
@@ -183,7 +178,7 @@ public class ScoreboardSign {
 
 	private VirtualTeam getOrCreateTeam(final int line) {
 		if (lines[line] == null)
-			lines[line] = new VirtualTeam("__fakeScore" + line, "", "");
+			lines[line] = new VirtualTeam(line, "__fakeScore" + line, "", "");
 		return lines[line];
 	}
 
@@ -244,12 +239,15 @@ public class ScoreboardSign {
 		private boolean playerChanged, prefixChanged, suffixChanged;
 		private boolean first = true;
 
+		private final int index;
+
 		// Virtual team
 
-		private VirtualTeam(final String name, final String prefix, final String suffix) {
-			this.name = name;
+		private VirtualTeam(int index, final String name, final String prefix, final String suffix) {
 			this.prefix = prefix;
 			this.suffix = suffix;
+			this.index = index;
+			this.name = name;
 		}
 
 		public void reset() {
@@ -374,6 +372,11 @@ public class ScoreboardSign {
 		}
 
 		public void setValue(final String value) {
+			if (!limit) {
+				setPrefix(value);
+				setPlayer(ChatColor.values()[index] + "");
+				return;
+			}
 			final int length = value.length();
 			if (length <= 64) {
 				setPrefix("");
@@ -387,9 +390,8 @@ public class ScoreboardSign {
 				setPrefix(value.substring(0, 64));
 				setPlayer(value.substring(64, 80));
 				setSuffix(value.substring(80));
-			} else {
+			} else if (length > 144 && limit)
 				throw new IllegalArgumentException("Too long virtual team value (" + length + " > 48 characters)");
-			}
 		}
 	}
 

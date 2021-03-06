@@ -22,9 +22,5 @@ DisableConsoleMessages: false
 # Disables the colour of the text in the console messages.
 DisableConsoleColour: false
 
-# This allows the scoreboard to be any of the same strings and colours.
-# Skore will handle similarities and colour clones.
-# If this is disabled, it adds 1-2 extra characters, but revolks safety checks.
-# If a line is identical to another, the line errors and becomes nothing, this is Spigot/Minecraft.
-# Keeping this option true prevents this from happening.
-Safety: true
+# If you want to keep the scoreboard from going over 144 characters set this to true.
+Limit: false
