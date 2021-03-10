@@ -48,7 +48,7 @@ dependencies {
 
 	implementation (group: "com.comphenix.protocol", name: "ProtocolLib", version: "4.6.0");
 
-	shade (group: 'org.json', name: 'json', version: '20201115')
+	shade (group: 'org.json', name: 'json', version: '20210307')
 
 }
 
