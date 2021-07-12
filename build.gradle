@@ -46,7 +46,7 @@ dependencies {
 		transitive = false
 	}
 
-	implementation (group: "com.comphenix.protocol", name: "ProtocolLib", version: "4.6.0");
+	implementation (group: "com.comphenix.protocol", name: "ProtocolLib", version: "4.7.0");
 
 	shade (group: 'org.json', name: 'json', version: '20210307')
 
