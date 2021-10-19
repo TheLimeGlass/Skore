@@ -7,6 +7,9 @@ configurations {
 	compile.extendsFrom shade
 }
 
+compileJava.options.encoding = 'Cp1252'
+compileTestJava.options.encoding = 'Cp1252'
+
 repositories {
 	mavenCentral()
 	jcenter()
