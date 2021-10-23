@@ -40,6 +40,7 @@ dependencies {
 	// Nullable annotation
 	implementation (group: 'org.eclipse.jdt', name: 'org.eclipse.jdt.annotation', version: '2.2.600')
 
+<<<<<<< HEAD
 	// Spigot/Bukkit
 	implementation (group: 'org.spigotmc', name: 'spigot-api', version: '1.17.1-R0.1-SNAPSHOT')
 
@@ -54,6 +55,19 @@ dependencies {
 	}
 
 	shadow (group: 'org.json', name: 'json', version: '20201115')
+=======
+	//Spigot/Bukkit
+	implementation (group: 'org.spigotmc', name: 'spigot-api', version: '1.17.1-R0.1-SNAPSHOT')
+
+	//Skript
+	implementation (group: 'com.github.SkriptLang', name: 'skript', version: '2.5.3') {
+		transitive = false
+	}
+
+	implementation (group: "com.comphenix.protocol", name: "ProtocolLib", version: "4.7.0");
+
+	shade (group: 'org.json', name: 'json', version: '20210307')
+>>>>>>> fa93a8d6828c7c8005216f004c678da6795bfbf0
 
 }
 
