@@ -17,8 +17,8 @@ public class ScoreboardManager implements Listener {
 		return scoreboards.stream().filter(scoreboard -> scoreboard.getPlayer().equals(player)).findFirst();
 	}
 
-	public static void setupScoreboard(Player player) {
-		getScoreboard(player).orElseGet(() -> {
+	public static ScoreboardSign setupScoreboard(Player player) {
+		return getScoreboard(player).orElseGet(() -> {
 			ScoreboardSign scoreboard = new ScoreboardSign(player, "§aSkoreBoard");
 			scoreboard.create();
 			scoreboards.add(scoreboard);

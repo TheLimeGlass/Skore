@@ -1,69 +1,79 @@
 import org.apache.tools.ant.filters.ReplaceTokens
-apply plugin: 'java-library'
-apply plugin: 'eclipse'
 
-configurations {
-	shade
-	compile.extendsFrom shade
+plugins {
+	id 'com.github.johnrengelman.shadow' version '7.0.0'
+	id 'maven-publish'
+	id 'eclipse'
+	id 'java'
 }
+
+compileJava.options.encoding = 'Cp1252'
+compileTestJava.options.encoding = 'Cp1252'
 
 repositories {
 	mavenCentral()
-	jcenter()
 	
 	// Spigot
 	maven {
 		url 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/'
 	}
 	
-	// Jitpack for Skript
-	maven {
-		url 'https://jitpack.io'
-	}
-	
 	// Bungeecord
 	maven {
-		url "https://oss.sonatype.org/content/repositories/snapshots"
+		url "https://oss.sonatype.org/content/repositories/snapshots/"
 	}
 	
 	// ProtocolLib
 	maven {
-		url "https://repo.dmulloy2.net/nexus/repository/public"
+		url "https://repo.dmulloy2.net/repository/public/"
+	}
+
+	// Jitpack for Skript
+	maven {
+		url 'https://jitpack.io'
 	}
 
 }
 
 dependencies {
 
-	//Nullable annotation
+	// Nullable annotation
 	implementation (group: 'org.eclipse.jdt', name: 'org.eclipse.jdt.annotation', version: '2.2.600')
 
-	//Spigot/Bukkit
-	implementation (group: 'org.spigotmc', name: 'spigot-api', version: '1.16.5-R0.1-SNAPSHOT')
+	// Spigot/Bukkit
+	implementation (group: 'org.spigotmc', name: 'spigot-api', version: '1.17.1-R0.1-SNAPSHOT')
 
-	//Skript
-	implementation (group: 'com.github.SkriptLang', name: 'skript', version: '2.4.1') {
+	// Skript
+	implementation (group: 'com.github.SkriptLang', name: 'Skript', version: '2.6-beta3') {
 		transitive = false
 	}
 
-	implementation (group: "com.comphenix.protocol", name: "ProtocolLib", version: "4.6.0");
+	// ProtocolLib
+	implementation (group: "com.comphenix.protocol", name: "ProtocolLib", version: "4.6.1-SNAPSHOT") {
+		transitive = false
+	}
 
-	shade (group: 'org.json', name: 'json', version: '20201115')
+	shadow (group: 'org.json', name: 'json', version: '20201115')
 
 }
 
 processResources {
 	filter ReplaceTokens, tokens: ["version": project.property("version")]
-	from (sourceSets.main.resources.srcDirs) {
-		include '**/*.yml'
-	}
+	from ('lang') {
+        include '**/*'
+        into 'lang/'
+    }
 }
 
-jar {
-	configurations.shade.each { dep ->
-		from(project.zipTree(dep)){
-			exclude 'META-INF', 'META-INF/**'
-			exclude '**/*.yml'
-		}
+shadowJar {
+	configurations = [project.configurations.shadow]
+	archiveVersion = project.property("version")
+	archiveBaseName = project.name
+	classifier = ''
+	minimize()
+	dependencies {
+		exclude(dependency('org.spigotmc:'))
+		exclude(dependency('org.yaml:'))
+		exclude(dependency('io.netty:'))
 	}
 }

@@ -10,7 +10,6 @@ import org.bukkit.event.Event;
 
 import java.lang.reflect.ParameterizedType;
 
-import ch.njol.skript.ScriptLoader;
 import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
@@ -36,18 +35,18 @@ public abstract class SkoreExpression<T> extends SimpleExpression<T> implements 
 	private Class<T> expressionClass;
 	protected ParseResult parser;
 	protected int patternMark;
-	
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public Class<? extends T> getReturnType() {
 		if (expressionClass == null) expressionClass = (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
 		return expressionClass;
 	}
-	
+
 	public String[] getSyntax() {
 		return Syntax.get(getClass().getSimpleName());
 	}
-	
+
 	@Override
 	public boolean isSingle() {
 		if (getClass().isAnnotationPresent(DetermineSingle.class)) {
@@ -64,7 +63,7 @@ public abstract class SkoreExpression<T> extends SimpleExpression<T> implements 
 	public boolean init(Expression<?>[] expressions, int matchedPattern, Kleenean isDelayed, ParseResult parser) {
 		if (getClass().isAnnotationPresent(Events.class)) {
 			if (!contains()) {
-				Skore.debugMessage("The expression `" + getClass().getSimpleName() + "` can't be used in the event: " + ScriptLoader.getCurrentEventName() + "it can only be used in: " + Arrays.toString(getClass().getAnnotation(Events.class).value()));
+				Skore.debugMessage("The expression `" + getClass().getSimpleName() + "` can't be used in the event: " + getParser().getCurrentEventName() + "it can only be used in: " + Arrays.toString(getClass().getAnnotation(Events.class).value()));
 				return false;
 			}
 		}
@@ -81,7 +80,7 @@ public abstract class SkoreExpression<T> extends SimpleExpression<T> implements 
 		if (event != null) Skore.debugMessage(getClass().getSimpleName() + " - " + modSyntax + " (" + event.getEventName() + ")" + " Data: " + Arrays.toString(values.toArray()));
 		return getClass().getSimpleName() + " - " + Arrays.toString(getSyntax());
 	}
-	
+
 	@Override
 	public Class<?>[] acceptChange(final ChangeMode mode) {
 		Class<?>[] returnable = (getClass().isAnnotationPresent(Multiple.class)) ? CollectionUtils.array(Utils.getArrayClass(expressionClass)) : CollectionUtils.array(expressionClass);
@@ -90,11 +89,11 @@ public abstract class SkoreExpression<T> extends SimpleExpression<T> implements 
 		if (!getClass().isAnnotationPresent(Changers.class)) return null;
 		return (Arrays.asList(getClass().getAnnotation(Changers.class).value()).contains(mode)) ? returnable : null;
 	}
-	
+
 	public Boolean isNull(Event event, @SuppressWarnings("unchecked") Class<T>... types) {
 		return isNull(event, expressions, types);
 	}
-	
+
 	public Boolean isNull(Event event, int index) {
 		return isNull(event, expressions, index);
 	}
@@ -102,12 +101,11 @@ public abstract class SkoreExpression<T> extends SimpleExpression<T> implements 
 	public Boolean areNull(Event event) {
 		return areNull(event, expressions);
 	}
-	
+
 	private Boolean contains() {
 		for (Class<? extends Event> event : getClass().getAnnotation(Events.class).value()) {
-			if (Arrays.asList(ScriptLoader.getCurrentEvents()).contains(event)) {
+			if (Arrays.asList(getParser().getCurrentEvents()).contains(event))
 				return true;
-			}
 		}
 		return false;
 	}

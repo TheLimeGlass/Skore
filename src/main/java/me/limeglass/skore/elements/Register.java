@@ -1,5 +1,6 @@
 package me.limeglass.skore.elements;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import ch.njol.skript.Skript;
 import ch.njol.skript.expressions.base.PropertyExpression;
@@ -46,10 +47,10 @@ public class Register {
 						String user = null;
 						String enumType = ((RegisterEnum) clazz.getAnnotation(RegisterEnum.class)).value();
 						Class returnType = ((RegisterEnum) clazz.getAnnotation(RegisterEnum.class)).ExprClass();
-						if (returnType.equals(String.class)) returnType = ((Expression) clazz.newInstance()).getReturnType();
+						if (returnType.equals(String.class)) returnType = ((Expression) clazz.getConstructor().newInstance()).getReturnType();
 						if (clazz.isAnnotationPresent(User.class)) user = ((User) clazz.getAnnotation(User.class)).value();
 						EnumClassInfo.create(returnType, enumType, user).register();
-					} catch (InstantiationException | IllegalAccessException e) {
+					} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e) {
 						e.printStackTrace();
 					}
 				}
@@ -57,9 +58,9 @@ public class Register {
 					try {
 						String typeName = ((RegisterType) clazz.getAnnotation(RegisterType.class)).value();
 						Class returnType = ((RegisterType) clazz.getAnnotation(RegisterType.class)).ExprClass();
-						if (returnType.equals(String.class)) returnType = ((Expression) clazz.newInstance()).getReturnType();
+						if (returnType.equals(String.class)) returnType = ((Expression) clazz.getConstructor().newInstance()).getReturnType();
 						TypeClassInfo.create(returnType, typeName).register();
-					} catch (InstantiationException | IllegalAccessException e) {
+					} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e) {
 						e.printStackTrace();
 					}
 				}
@@ -73,9 +74,9 @@ public class Register {
 					} else if (Expression.class.isAssignableFrom(clazz)) {
 						if (clazz.isAnnotationPresent(ExpressionProperty.class)) type = ((ExpressionProperty) clazz.getAnnotation(ExpressionProperty.class)).value();
 						try {
-							Skript.registerExpression(clazz, ((Expression) clazz.newInstance()).getReturnType(), type, syntax);
+							Skript.registerExpression(clazz, ((Expression) clazz.getConstructor().newInstance()).getReturnType(), type, syntax);
 							Skore.debugMessage("&5Registered Expression " + type.toString() + " " + clazz.getSimpleName() + " (" + clazz.getCanonicalName() + ") with syntax " + Arrays.toString(syntax));
-						} catch (IllegalAccessException | IllegalArgumentException | InstantiationException e) {
+						} catch (IllegalAccessException | IllegalArgumentException | InstantiationException | InvocationTargetException | NoSuchMethodException | SecurityException e) {
 							Skore.consoleMessage("&cFailed to register expression " + clazz.getCanonicalName());
 							e.printStackTrace();
 						}

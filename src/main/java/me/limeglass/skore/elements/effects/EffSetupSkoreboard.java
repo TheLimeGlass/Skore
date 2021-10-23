@@ -13,7 +13,7 @@ import me.limeglass.skore.utils.annotations.Patterns;
 @Name("Skoreboard - Setup")
 @Description("Setup the Skoreboard for the player, tells the system their skoreboard.")
 @Examples("setup skoreboard of player")
-@Patterns("(1¦(create|set[up])|2¦(remove|reset|delete|destory)) [a] [([skore] sc|sk)oreboard] (for|to|of) %players%")
+@Patterns("(1¦(create|set[up])|2¦(remove|reset|delete|destroy)) [a] [([skore] sc|sk)oreboard] (for|to|of) %players%")
 public class EffSetupSkoreboard extends SkoreEffect {
 	
 	@Override

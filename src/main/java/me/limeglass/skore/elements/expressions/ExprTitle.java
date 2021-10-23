@@ -23,7 +23,7 @@ import me.limeglass.skore.utils.annotations.Settable;
 @Changers({ChangeMode.SET, ChangeMode.DELETE, ChangeMode.RESET})
 @Settable(String.class)
 public class ExprTitle extends SkorePropertyExpression<Player, String> {
-	
+
 	@Override
 	protected String[] get(Event event, Player[] players) {
 		if (isNull(event))
@@ -32,7 +32,7 @@ public class ExprTitle extends SkorePropertyExpression<Player, String> {
 			collection.add(ScoreboardManager.getScoreboard(player).get().getObjectiveName());
 		return collection.toArray(new String[collection.size()]);
 	}
-	
+
 	@Override
 	public void change(Event event, Object[] delta, ChangeMode mode) {
 		if (isNull(event) || delta == null)
