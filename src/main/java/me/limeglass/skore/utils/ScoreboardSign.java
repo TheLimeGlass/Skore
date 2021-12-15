@@ -3,7 +3,9 @@ package me.limeglass.skore.utils;
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
+import com.comphenix.protocol.events.InternalStructure;
 import com.comphenix.protocol.events.PacketContainer;
+import com.comphenix.protocol.utility.MinecraftReflection;
 import com.comphenix.protocol.wrappers.EnumWrappers;
 import com.comphenix.protocol.wrappers.WrappedChatComponent;
 import com.google.common.collect.Lists;
@@ -17,25 +19,21 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 public class ScoreboardSign {
 
 	private static final ProtocolManager pm = ProtocolLibrary.getProtocolManager();
 
 	private final static boolean limit = Skore.getInstance().getConfig().getBoolean("Limit", false);
-	private final Player player;
-	private String objectiveName;
-
-	private boolean created;
 	private final VirtualTeam[] lines = new VirtualTeam[15];
+	private final Player player;
 
-	/**
-	 * Create a scoreboard sign for a given player and using a specific objective name.
-	 *
-	 * @param player		the player viewing it
-	 * @param objectiveName its name (displayed at the top of the scoreboard)
-	 */
-	public ScoreboardSign(final Player player, final String objectiveName) {
+	private String objectiveName;
+	private boolean created;
+
+	public ScoreboardSign(Player player, String objectiveName) {
 		this.player = player;
 		this.objectiveName = objectiveName;
 	}
@@ -48,9 +46,9 @@ public class ScoreboardSign {
 		return objectiveName;
 	}
 
-	private void sendPacket(final PacketContainer pc) {
+	private void sendPacket(PacketContainer container) {
 		try {
-			pm.sendServerPacket(player, pc);
+			pm.sendServerPacket(player, container);
 		} catch (InvocationTargetException e) {
 			e.printStackTrace();
 		}
@@ -60,14 +58,13 @@ public class ScoreboardSign {
 	 * Send the initial creation packets for this scoreboard sign. Must be called at least once.
 	 */
 	public void create() {
-		if (created) return;
+		if (created)
+			return;
 
 		sendPacket(createObjectivePacket(0, objectiveName));
 		sendPacket(setObjectiveSlot());
-
 		for (int i = 0; i < lines.length; i++)
 			sendLine(i);
-
 		created = true;
 	}
 
@@ -76,13 +73,13 @@ public class ScoreboardSign {
 	 * be recreated using {@link ScoreboardSign#create()} in order to be used again.
 	 */
 	public void destroy() {
-		if (!created) return;
+		if (!created)
+			return;
 
 		sendPacket(createObjectivePacket(1, null));
 		for (VirtualTeam team : lines)
 			if (team != null)
 				sendPacket(team.removeTeam());
-
 		created = false;
 	}
 
@@ -91,7 +88,7 @@ public class ScoreboardSign {
 	 *
 	 * @param name the name of the objective - max 32 characters
 	 */
-	public void setObjectiveName(final String name) {
+	public void setObjectiveName(String name) {
 		this.objectiveName = name;
 		if (created)
 			sendPacket(createObjectivePacket(2, name));
@@ -103,11 +100,12 @@ public class ScoreboardSign {
 	 * @param line  the number of the line - between 0 and 14
 	 * @param value the new value for the scoreboard line
 	 */
-	public void setLine(final int line, final String value) {
-		final VirtualTeam team = getOrCreateTeam(line);
-		final String old = team.getCurrentPlayer();
+	public void setLine(int line, String value) {
+		VirtualTeam team = getOrCreateTeam(line);
+		String old = team.getCurrentPlayer();
 
-		if (value.equals(old)) return;
+		if (value.equals(old))
+			return;
 
 		if (old != null && created)
 			sendPacket(removeLine(old));
@@ -121,7 +119,7 @@ public class ScoreboardSign {
 	 *
 	 * @param list the list of the new scoreboard lines
 	 */
-	public void setLines(final Iterable<String> list) {
+	public void setLines(Iterable<String> list) {
 		int i = 0;
 		for (String s : list) {
 			setLine(i, s);
@@ -134,7 +132,7 @@ public class ScoreboardSign {
 	 *
 	 * @param line the line to remove
 	 */
-	public void removeLine(final int line) {
+	public void removeLine(int line) {
 		final VirtualTeam team = getOrCreateTeam(line);
 		final String old = team.getCurrentPlayer();
 
@@ -152,7 +150,7 @@ public class ScoreboardSign {
 	 * @param line the line
 	 * @return its content
 	 */
-	public String getLine(final int line) {
+	public String getLine(int line) {
 		return line < 0 || line > 14 ? null : getOrCreateTeam(line).getValue();
 	}
 
@@ -166,9 +164,10 @@ public class ScoreboardSign {
 	}
 
 	private void sendLine(final int line) {
-		if (line < 0 || line > 14 || !created) return;
+		if (line < 0 || line > 14 || !created)
+			return;
 
-		final VirtualTeam team = getOrCreateTeam(line);
+		VirtualTeam team = getOrCreateTeam(line);
 		for (PacketContainer pc : team.sendLine())
 			sendPacket(pc);
 
@@ -176,7 +175,7 @@ public class ScoreboardSign {
 		team.reset();
 	}
 
-	private VirtualTeam getOrCreateTeam(final int line) {
+	private VirtualTeam getOrCreateTeam(int line) {
 		if (lines[line] == null)
 			lines[line] = new VirtualTeam(line, "__fakeScore" + line, "", "");
 		return lines[line];
@@ -185,8 +184,8 @@ public class ScoreboardSign {
 	// 0 : Create
 	// 1 : Delete
 	// 2 : Update
-	private PacketContainer createObjectivePacket(final int mode, final String displayName) {
-		final PacketContainer pc = pm.createPacket(PacketType.Play.Server.SCOREBOARD_OBJECTIVE, true);
+	private PacketContainer createObjectivePacket(int mode, String displayName) {
+		PacketContainer pc = pm.createPacket(PacketType.Play.Server.SCOREBOARD_OBJECTIVE, true);
 
 		pc.getIntegers().write(0, mode);
 		pc.getStrings().write(0, player.getName());
@@ -198,7 +197,7 @@ public class ScoreboardSign {
 	}
 
 	private PacketContainer setObjectiveSlot() {
-		final PacketContainer pc = pm.createPacket(PacketType.Play.Server.SCOREBOARD_DISPLAY_OBJECTIVE);
+		PacketContainer pc = pm.createPacket(PacketType.Play.Server.SCOREBOARD_DISPLAY_OBJECTIVE);
 
 		pc.getIntegers().write(0, 1);
 		pc.getStrings().write(0, player.getName());
@@ -206,7 +205,7 @@ public class ScoreboardSign {
 		return pc;
 	}
 
-	private PacketContainer sendScore(final String line, final int score) {
+	private PacketContainer sendScore(String line, int score) {
 		final PacketContainer pc = pm.createPacket(PacketType.Play.Server.SCOREBOARD_SCORE);
 
 		pc.getIntegers().write(0, score);
@@ -216,7 +215,7 @@ public class ScoreboardSign {
 		return pc;
 	}
 
-	private PacketContainer removeLine(final String line) {
+	private PacketContainer removeLine(String line) {
 		final PacketContainer pc = pm.createPacket(PacketType.Play.Server.SCOREBOARD_SCORE);
 
 		pc.getScoreboardActions().write(0, EnumWrappers.ScoreboardAction.REMOVE);
@@ -288,14 +287,23 @@ public class ScoreboardSign {
 		// Packets
 		private static final WrappedChatComponent emptyWrappedChatComponent = WrappedChatComponent.fromText("");
 
-		private PacketContainer createPacket(final int mode) {
-			final PacketContainer pc = pm.createPacket(PacketType.Play.Server.SCOREBOARD_TEAM, true);
+		private PacketContainer createPacket(int mode) {
+			PacketContainer packet = pm.createPacket(PacketType.Play.Server.SCOREBOARD_TEAM, true);
+			packet.getIntegers().write(0, mode);
+			packet.getStrings().write(0, name);
 
-			pc.getStrings().write(0, name).write(1, "always");
-			pc.getChatComponents().write(0, emptyWrappedChatComponent).write(1, WrappedChatComponent.fromText(prefix)).write(2, WrappedChatComponent.fromText(suffix));
-			pc.getIntegers().write(0, mode);
+			Optional<InternalStructure> optional = packet.getOptionalStructures().read(0);
+			if (optional.isPresent()) { // Make sure the structure exists (it always does)
+				InternalStructure structure = optional.get();
+				structure.getIntegers().write(0, 1); // This new team has 1 member
+				structure.getChatComponents().write(0, emptyWrappedChatComponent).write(1, WrappedChatComponent.fromText(prefix)).write(2, WrappedChatComponent.fromText(suffix));
+				//structure.getEnumModifier(ChatColor.class, MinecraftReflection.getMinecraftClass("EnumChatFormat")).write(0, color);
+				packet.getOptionalStructures().write(0, Optional.of(structure)); // Set the changed structure as the one to use in the packet
+			}
+			packet.getModifier().write(2, Lists.newArrayList(getName(), UUID.randomUUID().toString())); // Team consists of the viewer by name, and the fake entity by its generated UUID
+			//packet.getChatComponents().write(0, emptyWrappedChatComponent).write(1, WrappedChatComponent.fromText(prefix)).write(2, WrappedChatComponent.fromText(suffix));
 
-			return pc;
+			return packet;
 		}
 
 		public Iterable<PacketContainer> sendLine() {
@@ -340,7 +348,7 @@ public class ScoreboardSign {
 
 		// Player
 
-		public PacketContainer addOrRemovePlayer(final int mode, final String playerName) {
+		public PacketContainer addOrRemovePlayer(int mode, String playerName) {
 			final PacketContainer pc = pm.createPacket(PacketType.Play.Server.SCOREBOARD_TEAM);
 
 			pc.getIntegers().write(0, mode);
@@ -358,7 +366,7 @@ public class ScoreboardSign {
 			return currentPlayer;
 		}
 
-		public void setPlayer(final String name) {
+		public void setPlayer(String name) {
 			if (this.currentPlayer == null || !this.currentPlayer.equals(name))
 				this.playerChanged = true;
 			this.oldPlayer = this.currentPlayer;
@@ -371,7 +379,7 @@ public class ScoreboardSign {
 			return getPrefix() + getCurrentPlayer() + getSuffix();
 		}
 
-		public void setValue(final String value) {
+		public void setValue(String value) {
 			if (!limit) {
 				setPrefix(value);
 				setPlayer(ChatColor.values()[index] + "");
