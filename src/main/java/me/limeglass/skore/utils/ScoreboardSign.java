@@ -1,26 +1,25 @@
 package me.limeglass.skore.utils;
 
-import com.comphenix.protocol.PacketType;
-import com.comphenix.protocol.ProtocolLibrary;
-import com.comphenix.protocol.ProtocolManager;
-import com.comphenix.protocol.events.InternalStructure;
-import com.comphenix.protocol.events.PacketContainer;
-import com.comphenix.protocol.utility.MinecraftReflection;
-import com.comphenix.protocol.wrappers.EnumWrappers;
-import com.comphenix.protocol.wrappers.WrappedChatComponent;
-import com.google.common.collect.Lists;
-
-import me.limeglass.skore.Skore;
-import net.md_5.bungee.api.ChatColor;
-
-import org.bukkit.entity.Player;
-
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+
+import org.bukkit.entity.Player;
+
+import com.comphenix.protocol.PacketType;
+import com.comphenix.protocol.ProtocolLibrary;
+import com.comphenix.protocol.ProtocolManager;
+import com.comphenix.protocol.events.InternalStructure;
+import com.comphenix.protocol.events.PacketContainer;
+import com.comphenix.protocol.wrappers.EnumWrappers;
+import com.comphenix.protocol.wrappers.WrappedChatComponent;
+import com.google.common.collect.Lists;
+
+import me.limeglass.skore.Skore;
+import net.md_5.bungee.api.ChatColor;
 
 public class ScoreboardSign {
 
@@ -107,7 +106,7 @@ public class ScoreboardSign {
 		if (value.equals(old))
 			return;
 
-		if (old != null && created)
+		if (old != null && created && line != team.index)
 			sendPacket(removeLine(old));
 
 		team.setValue(value);
