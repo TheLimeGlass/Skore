@@ -17,10 +17,13 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.Trigger;
 import ch.njol.skript.lang.TriggerItem;
 import ch.njol.skript.log.ErrorQuality;
+import ch.njol.skript.util.chat.BungeeConverter;
+import ch.njol.skript.util.chat.ChatMessages;
 import ch.njol.skript.variables.Variables;
 import ch.njol.util.Kleenean;
 import me.limeglass.skore.utils.ScoreboardManager;
 import me.limeglass.skore.utils.ScoreboardSign;
+import net.md_5.bungee.api.chat.BaseComponent;
 
 public class SecUpdate extends EffectSection {
 
@@ -128,6 +131,7 @@ public class SecUpdate extends EffectSection {
 		if (!condition.check(event))
 			return walk(event, true);
 		UpdateInfo info = new UpdateInfo(players.getArray(event), slots.getArray(event), line == null ? null : line.getSingle(event));
+		BaseComponent[] components = BungeeConverter.convert(ChatMessages.parseToArray(info.getLine()));
 		for (Player player : info.getPlayers()) {
 			for (Number value : info.getSlots()) {
 				int slot = value.intValue();
@@ -139,7 +143,7 @@ public class SecUpdate extends EffectSection {
 				if (!remove) {
 					Optional<ScoreboardSign> scoreboard = ScoreboardManager.getScoreboard(player);
 					if (scoreboard.isPresent())
-						scoreboard.get().setLine(slot, info.getLine());
+						scoreboard.get().setLine(slot, components);
 				} else {
 					Optional<ScoreboardSign> scoreboard = ScoreboardManager.getScoreboard(player);
 					if (scoreboard.isPresent())

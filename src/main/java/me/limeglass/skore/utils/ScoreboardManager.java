@@ -9,6 +9,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
 
+import net.md_5.bungee.api.chat.TextComponent;
+
 public class ScoreboardManager implements Listener {
 
 	private final static Set<ScoreboardSign> scoreboards = new HashSet<>();
@@ -19,7 +21,7 @@ public class ScoreboardManager implements Listener {
 
 	public static ScoreboardSign setupScoreboard(Player player) {
 		return getScoreboard(player).orElseGet(() -> {
-			ScoreboardSign scoreboard = new ScoreboardSign(player, "§aSkoreBoard");
+			ScoreboardSign scoreboard = new ScoreboardSign(player, TextComponent.fromLegacyText("&aSkoreBoard"));
 			scoreboard.create();
 			scoreboards.add(scoreboard);
 			return scoreboard;

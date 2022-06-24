@@ -10,6 +10,8 @@ import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.log.ErrorQuality;
+import ch.njol.skript.util.chat.BungeeConverter;
+import ch.njol.skript.util.chat.ChatMessages;
 import me.limeglass.skore.lang.SkorePropertyExpression;
 import me.limeglass.skore.utils.ScoreboardManager;
 import me.limeglass.skore.utils.ScoreboardSign;
@@ -17,6 +19,7 @@ import me.limeglass.skore.utils.annotations.Changers;
 import me.limeglass.skore.utils.annotations.Properties;
 import me.limeglass.skore.utils.annotations.PropertiesAddition;
 import me.limeglass.skore.utils.annotations.Settable;
+import net.md_5.bungee.api.chat.BaseComponent;
 
 @Name("Skoreboard - Value")
 @Description("Returns or changes the value of the Skoreboard(s).")
@@ -42,6 +45,7 @@ public class ExprValue extends SkorePropertyExpression<Player, String> {
 	public void change(Event event, Object[] delta, ChangeMode mode) {
 		if (isNull(event) || delta == null)
 			return;
+		BaseComponent[] components = BungeeConverter.convert(ChatMessages.parseToArray((String) delta[0]));
 		for (Player player : expressions.getAll(event, Player.class)) {
 			for (Number value : expressions.getAll(event, Number.class)) {
 				int slot = value.intValue();
@@ -53,7 +57,7 @@ public class ExprValue extends SkorePropertyExpression<Player, String> {
 				if (mode == ChangeMode.SET) {
 					Optional<ScoreboardSign> scoreboard = ScoreboardManager.getScoreboard(player);
 					if (scoreboard.isPresent())
-						scoreboard.get().setLine(slot, (String)delta[0]);
+						scoreboard.get().setLine(slot, components);
 				} else {
 					Optional<ScoreboardSign> scoreboard = ScoreboardManager.getScoreboard(player);
 					if (scoreboard.isPresent())

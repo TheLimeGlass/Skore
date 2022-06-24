@@ -6,6 +6,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Stream;
 
 import org.bukkit.entity.Player;
 
@@ -14,12 +15,15 @@ import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
 import com.comphenix.protocol.events.InternalStructure;
 import com.comphenix.protocol.events.PacketContainer;
+import com.comphenix.protocol.wrappers.ComponentConverter;
 import com.comphenix.protocol.wrappers.EnumWrappers;
 import com.comphenix.protocol.wrappers.WrappedChatComponent;
 import com.google.common.collect.Lists;
 
 import me.limeglass.skore.Skore;
 import net.md_5.bungee.api.ChatColor;
+import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.api.chat.TextComponent;
 
 public class ScoreboardSign {
 
@@ -29,10 +33,10 @@ public class ScoreboardSign {
 	private final VirtualTeam[] lines = new VirtualTeam[15];
 	private final Player player;
 
-	private String objectiveName;
+	private BaseComponent[] objectiveName;
 	private boolean created;
 
-	public ScoreboardSign(Player player, String objectiveName) {
+	public ScoreboardSign(Player player, BaseComponent... objectiveName) {
 		this.player = player;
 		this.objectiveName = objectiveName;
 	}
@@ -41,7 +45,7 @@ public class ScoreboardSign {
 		return player;
 	}
 
-	public String getObjectiveName() {
+	public BaseComponent[] getObjectiveName() {
 		return objectiveName;
 	}
 
@@ -75,7 +79,7 @@ public class ScoreboardSign {
 		if (!created)
 			return;
 
-		sendPacket(createObjectivePacket(1, null));
+		sendPacket(createObjectivePacket(1));
 		for (VirtualTeam team : lines)
 			if (team != null)
 				sendPacket(team.removeTeam());
@@ -87,10 +91,10 @@ public class ScoreboardSign {
 	 *
 	 * @param name the name of the objective - max 32 characters
 	 */
-	public void setObjectiveName(String name) {
-		this.objectiveName = name;
+	public void setObjectiveName(BaseComponent... components) {
+		this.objectiveName = components;
 		if (created)
-			sendPacket(createObjectivePacket(2, name));
+			sendPacket(createObjectivePacket(2, components));
 	}
 
 	/**
@@ -99,11 +103,11 @@ public class ScoreboardSign {
 	 * @param line  the number of the line - between 0 and 14
 	 * @param value the new value for the scoreboard line
 	 */
-	public void setLine(int line, String value) {
+	public void setLine(int line, BaseComponent... value) {
 		VirtualTeam team = getOrCreateTeam(line);
 		String old = team.getCurrentPlayer();
 
-		if (value.equals(old))
+		if (TextComponent.toLegacyText(value).equals(old))
 			return;
 
 		if (old != null && created && line != team.index)
@@ -118,9 +122,9 @@ public class ScoreboardSign {
 	 *
 	 * @param list the list of the new scoreboard lines
 	 */
-	public void setLines(Iterable<String> list) {
+	public void setLines(Iterable<BaseComponent[]> list) {
 		int i = 0;
-		for (String s : list) {
+		for (BaseComponent[] s : list) {
 			setLine(i, s);
 			i++;
 		}
@@ -150,7 +154,7 @@ public class ScoreboardSign {
 	 * @return its content
 	 */
 	public String getLine(int line) {
-		return line < 0 || line > 14 ? null : getOrCreateTeam(line).getValue();
+		return line < 0 || line > 14 ? null : getOrCreateTeam(line).getStringValue();
 	}
 
 	/**
@@ -176,21 +180,21 @@ public class ScoreboardSign {
 
 	private VirtualTeam getOrCreateTeam(int line) {
 		if (lines[line] == null)
-			lines[line] = new VirtualTeam(line, "__fakeScore" + line, "", "");
+			lines[line] = new VirtualTeam(line, "__fakeScore" + line, TextComponent.fromLegacyText(""), TextComponent.fromLegacyText(""));
 		return lines[line];
 	}
 
 	// 0 : Create
 	// 1 : Delete
 	// 2 : Update
-	private PacketContainer createObjectivePacket(int mode, String displayName) {
+	private PacketContainer createObjectivePacket(int mode, BaseComponent... components) {
 		PacketContainer pc = pm.createPacket(PacketType.Play.Server.SCOREBOARD_OBJECTIVE, true);
 
 		pc.getIntegers().write(0, mode);
 		pc.getStrings().write(0, player.getName());
 
 		if (mode == 0 || mode == 2)
-			pc.getChatComponents().write(0, WrappedChatComponent.fromText(displayName));
+			pc.getChatComponents().write(0, ComponentConverter.fromBaseComponent(components));
 
 		return pc;
 	}
@@ -232,7 +236,7 @@ public class ScoreboardSign {
 		private final String name;
 
 		private String currentPlayer, oldPlayer;
-		private String prefix, suffix;
+		private BaseComponent[] prefix, suffix;
 
 		private boolean playerChanged, prefixChanged, suffixChanged;
 		private boolean first = true;
@@ -241,7 +245,7 @@ public class ScoreboardSign {
 
 		// Virtual team
 
-		private VirtualTeam(int index, final String name, final String prefix, final String suffix) {
+		private VirtualTeam(int index, final String name, final BaseComponent[] prefix, final BaseComponent[] suffix) {
 			this.prefix = prefix;
 			this.suffix = suffix;
 			this.index = index;
@@ -261,11 +265,11 @@ public class ScoreboardSign {
 
 		// Prefix
 
-		public String getPrefix() {
+		public BaseComponent[] getPrefix() {
 			return prefix;
 		}
 
-		public void setPrefix(final String prefix) {
+		public void setPrefix(BaseComponent[] prefix) {
 			if (this.prefix == null || !this.prefix.equals(prefix))
 				this.prefixChanged = true;
 			this.prefix = prefix;
@@ -273,11 +277,11 @@ public class ScoreboardSign {
 
 		// Suffix
 
-		public String getSuffix() {
+		public BaseComponent[] getSuffix() {
 			return suffix;
 		}
 
-		public void setSuffix(final String suffix) {
+		public void setSuffix(BaseComponent[] suffix) {
 			if (this.suffix == null || !this.suffix.equals(prefix))
 				this.suffixChanged = true;
 			this.suffix = suffix;
@@ -295,7 +299,7 @@ public class ScoreboardSign {
 			if (optional.isPresent()) { // Make sure the structure exists (it always does)
 				InternalStructure structure = optional.get();
 				structure.getIntegers().write(0, 1); // This new team has 1 member
-				structure.getChatComponents().write(0, emptyWrappedChatComponent).write(1, WrappedChatComponent.fromText(prefix)).write(2, WrappedChatComponent.fromText(suffix));
+				structure.getChatComponents().write(0, emptyWrappedChatComponent).write(1, ComponentConverter.fromBaseComponent(prefix)).write(2, ComponentConverter.fromBaseComponent(suffix));
 				//structure.getEnumModifier(ChatColor.class, MinecraftReflection.getMinecraftClass("EnumChatFormat")).write(0, color);
 				packet.getOptionalStructures().write(0, Optional.of(structure)); // Set the changed structure as the one to use in the packet
 			}
@@ -373,30 +377,38 @@ public class ScoreboardSign {
 		}
 
 		// Value
-
-		public String getValue() {
-			return getPrefix() + getCurrentPlayer() + getSuffix();
+		public String getStringValue() {
+			TextComponent text = new TextComponent();
+			Stream.of(getPrefix(), getCurrentPlayer(), getSuffix()).flatMap(component -> Stream.of(component)).forEach(component -> {
+				if (component instanceof String)
+					text.addExtra((String)component);
+				else
+					text.addExtra((BaseComponent)component);
+			});
+			return TextComponent.toLegacyText(text);
 		}
 
-		public void setValue(String value) {
+		@SuppressWarnings("deprecation")
+		public void setValue(BaseComponent... value) {
 			if (!limit) {
 				setPrefix(value);
 				setPlayer(ChatColor.values()[index] + "");
 				return;
 			}
-			final int length = value.length();
+			String compiled = TextComponent.toLegacyText(value);
+			final int length = compiled.length();
 			if (length <= 64) {
-				setPrefix("");
-				setPlayer(value);
-				setSuffix("");
+				setPrefix(TextComponent.fromLegacyText(""));
+				setPlayer(TextComponent.toLegacyText(value));
+				setSuffix(TextComponent.fromLegacyText(""));
 			} else if (length <= 80) {
-				setPrefix(value.substring(0, 64));
-				setPlayer(value.substring(64));
-				setSuffix("");
+				setPrefix(TextComponent.fromLegacyText(compiled.substring(0, 64)));
+				setPlayer(compiled.substring(64));
+				setSuffix(TextComponent.fromLegacyText(""));
 			} else if (length <= 144) {
-				setPrefix(value.substring(0, 64));
-				setPlayer(value.substring(64, 80));
-				setSuffix(value.substring(80));
+				setPrefix(TextComponent.fromLegacyText(compiled.substring(0, 64)));
+				setPlayer(compiled.substring(64, 80));
+				setSuffix(TextComponent.fromLegacyText(compiled.substring(80)));
 			} else if (length > 144 && limit)
 				throw new IllegalArgumentException("Too long virtual team value (" + length + " > 48 characters)");
 		}
