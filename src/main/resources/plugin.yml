@@ -1,7 +1,7 @@
 name: Skore
 author: LimeGlass
 description: A Skript addon dedicated to perfecting scoreboards.
-api-version: 1.17
+api-version: 1.20
 version: @version@
 main: me.limeglass.skore.Skore
 depend: [Skript, ProtocolLib]

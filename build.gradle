@@ -1,79 +1,91 @@
 import org.apache.tools.ant.filters.ReplaceTokens
 
 plugins {
-	id 'com.github.johnrengelman.shadow' version '8.1.1'
-	id 'maven-publish'
-	id 'eclipse'
-	id 'java'
+    id 'com.github.johnrengelman.shadow' version '8.1.1'
+    id 'io.papermc.paperweight.userdev' version '1.5.10'
+    id 'xyz.jpenilla.run-paper' version '2.2.2'
+    id 'eclipse'
+    id 'java'
 }
 
-compileJava.options.encoding = 'Cp1252'
-compileTestJava.options.encoding = 'Cp1252'
+def supportedJava = 17
+
+java {
+    toolchain.languageVersion.set(JavaLanguageVersion.of(supportedJava))
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.compilerArgs += ['-source', '' + supportedJava, '-target', '' + supportedJava]
+}
+
+compileTestJava.options.encoding = 'UTF-8'
+compileJava.options.encoding = 'UTF-8'
 
 repositories {
-	mavenCentral()
-	
-	// Spigot
-	maven {
-		url 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/'
-	}
-	
-	// Bungeecord
-	maven {
-		url "https://oss.sonatype.org/content/repositories/snapshots/"
-	}
-	
-	// ProtocolLib
-	maven {
-		url "https://repo.dmulloy2.net/repository/public/"
-	}
+    mavenCentral()
 
-	// Skript
-	maven {
-		url 'https://repo.skriptlang.org/releases'
-	}
+    // Spigot
+    maven {
+        url 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/'
+    }
+
+    // Bungeecord
+    maven {
+        url "https://oss.sonatype.org/content/repositories/snapshots/"
+    }
+
+    // Paper and Adventure API
+    maven {
+        url 'https://repo.papermc.io/repository/maven-public/'
+    }
+
+    // ProtocolLib
+    maven {
+        url "https://repo.dmulloy2.net/repository/public/"
+    }
+
+    // Skript
+    maven {
+        url 'https://repo.skriptlang.org/releases'
+    }
 
 }
 
 dependencies {
 
-	// Nullable annotation
-	implementation (group: 'org.eclipse.jdt', name: 'org.eclipse.jdt.annotation', version: '2.2.700')
+    //Spigot/Bukkit
+    implementation (group: 'org.spigotmc', name: 'spigot-api', version: '1.20.2-R0.1-SNAPSHOT')
+    paperweight.paperDevBundle("1.20.2-R0.1-SNAPSHOT") // Used for reverse engineering
 
-	// Spigot/Bukkit
-	implementation (group: 'org.spigotmc', name: 'spigot-api', version: '1.19.4-R0.1-SNAPSHOT')
+    // Nullable annotation
+    implementation (group: 'org.eclipse.jdt', name: 'org.eclipse.jdt.annotation', version: '2.2.700')
 
-	// Skript
-	implementation (group: 'com.github.SkriptLang', name: 'Skript', version: '2.6.3') {
-		transitive = false
-	}
+    // ProtocolLib
+    implementation (group: "com.comphenix.protocol", name: "ProtocolLib", version: "5.1.0") {
+        transitive = false
+    }
 
-	// ProtocolLib
-	implementation (group: "com.comphenix.protocol", name: "ProtocolLib", version: "4.8.0") {
-		transitive = false
-	}
+    // Skript
+    implementation (group: 'com.github.SkriptLang', name: 'Skript', version: '2.7.3') {
+        transitive = false
+    }
 
-	shadow (group: 'org.json', name: 'json', version: '20220924')
+    // Adventure API serializer to text components for Bukkit.
+    shadow group: 'net.kyori', name: 'adventure-text-serializer-bungeecord', version: '4.3.1'
+
+    shadow group: 'org.bstats', name: 'bstats-bukkit', version: '3.0.2'
 
 }
 
 processResources {
-	filter ReplaceTokens, tokens: ["version": project.property("version")]
-	from ('lang') {
+    filter ReplaceTokens, tokens: ["version": project.property("version")]
+       from ('lang') {
         include '**/*'
         into 'lang/'
     }
 }
 
 shadowJar {
-	configurations = [project.configurations.shadow]
-	archiveVersion = project.property("version")
-	archiveBaseName = project.name
-	classifier = ''
-	minimize()
-	dependencies {
-		exclude(dependency('org.spigotmc:'))
-		exclude(dependency('org.yaml:'))
-		exclude(dependency('io.netty:'))
-	}
+    configurations = [project.configurations.shadow]
+    minimize()
 }

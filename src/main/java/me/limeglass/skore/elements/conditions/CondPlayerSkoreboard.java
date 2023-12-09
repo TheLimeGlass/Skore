@@ -1,24 +1,36 @@
 package me.limeglass.skore.elements.conditions;
 
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
 
+import ch.njol.skript.conditions.base.PropertyCondition;
 import ch.njol.skript.doc.Description;
+import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
-import me.limeglass.skore.lang.SkoreCondition;
+import ch.njol.skript.doc.Since;
 import me.limeglass.skore.utils.ScoreboardManager;
-import me.limeglass.skore.utils.annotations.Patterns;
 
 @Name("Skoreboard - Player has Skoreboard")
-@Description("Check if the player has a skoreboard initialized.")
-@Patterns("%player% (1¦has|2¦does not have) [a] skoreboard")
-public class CondPlayerSkoreboard extends SkoreCondition {
+@Description("Check if players have a skoreboard initialized.")
+@Examples({
+	"on player join:",
+		"\tplayer does not have a skoreboard",
+		"\tsetup skoreboard for player"
+})
+@Since("3.0.0")
+public class CondPlayerSkoreboard extends PropertyCondition<Player> {
 
-	public boolean check(Event event) {
-		if (areNull(event))
-			return !isNegated();
-		Player player = expressions.getSingle(event, Player.class);
-		return ScoreboardManager.getScoreboard(player).isPresent() ? isNegated() : !isNegated();
+	static {
+		register(CondPlayerSkoreboard.class, PropertyType.HAVE, "[a] ([custom|skore] score|skore)[ ]board", "players");
+	}
+
+	@Override
+	public boolean check(Player player) {
+		return ScoreboardManager.getScoreboard(player).isPresent();
+	}
+
+	@Override
+	protected String getPropertyName() {
+		return "skoreboard";
 	}
 
 }

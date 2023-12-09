@@ -1,6 +1,5 @@
 package me.limeglass.skore.utils;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -9,6 +8,7 @@ import java.util.UUID;
 import java.util.stream.Stream;
 
 import org.bukkit.entity.Player;
+import org.bukkit.scoreboard.DisplaySlot;
 
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolLibrary;
@@ -21,6 +21,7 @@ import com.comphenix.protocol.wrappers.WrappedChatComponent;
 import com.google.common.collect.Lists;
 
 import me.limeglass.skore.Skore;
+import me.limeglass.skore.utils.wrappers.WrapperPlayServerScoreboardDisplayObjective;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -50,11 +51,7 @@ public class ScoreboardSign {
 	}
 
 	private void sendPacket(PacketContainer container) {
-		try {
-			pm.sendServerPacket(player, container);
-		} catch (InvocationTargetException e) {
-			e.printStackTrace();
-		}
+		pm.sendServerPacket(player, container);
 	}
 
 	/**
@@ -200,16 +197,15 @@ public class ScoreboardSign {
 	}
 
 	private PacketContainer setObjectiveSlot() {
-		PacketContainer pc = pm.createPacket(PacketType.Play.Server.SCOREBOARD_DISPLAY_OBJECTIVE);
-
-		pc.getIntegers().write(0, 1);
-		pc.getStrings().write(0, player.getName());
-
-		return pc;
+		WrapperPlayServerScoreboardDisplayObjective displayPacket = new WrapperPlayServerScoreboardDisplayObjective();
+		displayPacket.setDisplaySlot(DisplaySlot.SIDEBAR);
+		displayPacket.setScoreName(player.getName());
+		displayPacket.sendPacket(player);
+		return displayPacket.getHandle();
 	}
 
 	private PacketContainer sendScore(String line, int score) {
-		final PacketContainer pc = pm.createPacket(PacketType.Play.Server.SCOREBOARD_SCORE);
+		PacketContainer pc = pm.createPacket(PacketType.Play.Server.SCOREBOARD_SCORE);
 
 		pc.getIntegers().write(0, score);
 		pc.getScoreboardActions().write(0, EnumWrappers.ScoreboardAction.CHANGE);
@@ -219,7 +215,7 @@ public class ScoreboardSign {
 	}
 
 	private PacketContainer removeLine(String line) {
-		final PacketContainer pc = pm.createPacket(PacketType.Play.Server.SCOREBOARD_SCORE);
+		PacketContainer pc = pm.createPacket(PacketType.Play.Server.SCOREBOARD_SCORE);
 
 		pc.getScoreboardActions().write(0, EnumWrappers.ScoreboardAction.REMOVE);
 		pc.getStrings().write(0, line);
