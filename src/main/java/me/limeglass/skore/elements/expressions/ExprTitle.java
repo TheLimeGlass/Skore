@@ -28,8 +28,8 @@ public class ExprTitle extends SimplePropertyExpression<Player, String> {
 
 	static {
 		Skript.registerExpression(ExprTitle.class, String.class, ExpressionType.PROPERTY,
-				"[(all [[of] the]|the)] [([custom|skore] score|skore)[ ]board] title[s] of %players%",
-				"%players%'[s] [([custom|skore] score|skore)[ ]board] title[s]"
+				"[(all [[of] the]|the)] ([custom|skore] score|skore)[[ ]board] title[s] of %players%",
+				"%players%'[s] ([custom|skore] score|skore)[[ ]board] title[s]"
 		);
 	}
 

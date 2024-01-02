@@ -31,8 +31,8 @@ public class ExprValue extends PropertyExpression<Player, String> {
 
 	static {
 		Skript.registerExpression(ExprTitle.class, String.class, ExpressionType.PROPERTY,
-				"[(all [[of] the]|the)] [([custom|skore] score|skore)[ ]board] (slot|value|line)[s] %numbers% of %players%",
-				"%players%'[s] [([custom|skore] score|skore)[ ]board] (slot|value|line)[s] %numbers%"
+				"[(all [[of] the]|the)] ([custom|skore] score|skore)[[ ]board] (slot|value|line)[s] %numbers% of %players%",
+				"%players%'[s] ([custom|skore] score|skore)[[ ]board] (slot|value|line)[s] %numbers%"
 		);
 	}
 
