@@ -2,19 +2,26 @@ package me.limeglass.skore.elements;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
+
 import ch.njol.skript.Skript;
 import ch.njol.skript.expressions.base.PropertyExpression;
 import ch.njol.skript.lang.Condition;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
-import me.limeglass.skore.Metrics;
 import me.limeglass.skore.Skore;
 import me.limeglass.skore.Syntax;
 import me.limeglass.skore.utils.EnumClassInfo;
 import me.limeglass.skore.utils.ReflectionUtil;
 import me.limeglass.skore.utils.TypeClassInfo;
-import me.limeglass.skore.utils.annotations.*;
+import me.limeglass.skore.utils.annotations.Disabled;
+import me.limeglass.skore.utils.annotations.ExpressionProperty;
+import me.limeglass.skore.utils.annotations.Patterns;
+import me.limeglass.skore.utils.annotations.Properties;
+import me.limeglass.skore.utils.annotations.PropertiesAddition;
+import me.limeglass.skore.utils.annotations.RegisterEnum;
+import me.limeglass.skore.utils.annotations.RegisterType;
+import me.limeglass.skore.utils.annotations.User;
 
 @SuppressWarnings({ "unchecked", "rawtypes" })
 public class Register {
@@ -85,32 +92,5 @@ public class Register {
 			}
 		}
 	}
-	
-	public static void metrics(Metrics metrics) {
-		metrics.addCustomChart(new Metrics.SimplePie("skript_version") {
-			@Override
-			public String getValue() {
-				return Skript.getVersion().toString();
-			}
-		});
-		metrics.addCustomChart(new Metrics.SimplePie("use_encryption") {
-			@Override
-			public String getValue() {
-				return Skore.getInstance().getConfig().getBoolean("security.encryption.enabled", false) + "";
-			}
-		});
-		metrics.addCustomChart(new Metrics.SimplePie("use_breaches") {
-			@Override
-			public String getValue() {
-				return Skore.getInstance().getConfig().getBoolean("security.breaches.enabled", false) + "";
-			}
-		});
-		metrics.addCustomChart(new Metrics.SimplePie("use_password") {
-			@Override
-			public String getValue() {
-				return Skore.getInstance().getConfig().getBoolean("security.password.enabled", false) + "";
-			}
-		});
-		Skore.debugMessage("Metrics registered!");
-	}
+
 }

@@ -28,7 +28,7 @@ import net.md_5.bungee.api.chat.BaseComponent;
 public class SecUpdate extends EffectSection {
 
 	static {
-//		Skript.registerSection(SecUpdate.class, "(1¦remove|2¦(set|update)) [the] (slot|value|line)[s] %numbers% of (%players%'[s] skoreboard[s]|skoreboard[s] [of] %players%) [to %-string%] when <.+>");
+//		Skript.registerSection(SecUpdate.class, "(1Â¦remove|2Â¦(set|update)) [the] (slot|value|line)[s] %numbers% of (%players%'[s] skoreboard[s]|skoreboard[s] [of] %players%) [to %-string%] when <.+>");
 //		EventValues.registerEventValue(UpdateInfo.class, String.class, new Getter<>() {
 //			@Override
 //			public @Nullable String get(UpdateInfo info) {

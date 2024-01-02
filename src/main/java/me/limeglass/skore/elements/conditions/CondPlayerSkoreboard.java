@@ -11,7 +11,7 @@ import me.limeglass.skore.utils.annotations.Patterns;
 
 @Name("Skoreboard - Player has Skoreboard")
 @Description("Check if the player has a skoreboard initialized.")
-@Patterns("%player% (1¦has|2¦does not have) [a] skoreboard")
+@Patterns("%player% (1Â¦has|2Â¦does not have) [a] skoreboard")
 public class CondPlayerSkoreboard extends SkoreCondition {
 
 	public boolean check(Event event) {

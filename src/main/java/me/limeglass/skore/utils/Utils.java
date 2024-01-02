@@ -57,14 +57,14 @@ public class Utils {
 	public static String cc(String text) {
 		return ChatColor.translateAlternateColorCodes((char)'&', text);
 	}
-	
+
 	@SuppressWarnings("deprecation")
 	public static int getTicks(Timespan time) {
 		if (Skript.methodExists(Timespan.class, "getTicks_i")) {
 			Number tick = time.getTicks_i();
 			return tick.intValue();
 		} else {
-			return time.getTicks();
+			return (int) time.getTicks();
 		}
 	}
 

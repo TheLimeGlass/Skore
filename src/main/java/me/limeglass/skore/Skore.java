@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -17,7 +18,6 @@ import com.comphenix.protocol.utility.MinecraftVersion;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.SkriptAddon;
-import me.limeglass.skore.elements.Register;
 import me.limeglass.skore.utils.ScoreboardManager;
 import me.limeglass.skore.utils.Utils;
 import net.md_5.bungee.api.ChatColor;
@@ -30,10 +30,9 @@ public class Skore extends JavaPlugin {
 	private static String nameplate = "[Skore] ";
 	private static Skore instance;
 	private SkriptAddon addon;
-	private Metrics metrics;
 
 	public void onEnable() {
-		if (!MinecraftVersion.atOrAbove(MinecraftVersion.AQUATIC_UPDATE)) {
+		if (!MinecraftVersion.getCurrentVersion().isAtLeast(MinecraftVersion.AQUATIC_UPDATE)) {
 			getPluginLoader().disablePlugin(this);
 			Bukkit.getLogger().info(nameplate + " version 2.0.0+ of Skore will only run on 1.13+ currently. Please update your server or use the older 1.X Skore series.");
 			return;
@@ -61,8 +60,6 @@ public class Skore extends JavaPlugin {
 			files.put(name, configuration);
 		}
 		Bukkit.getPluginManager().registerEvents(new ScoreboardManager(), this);
-		metrics = new Metrics(this);
-		Register.metrics(metrics);
 		if (!getConfig().getBoolean("DisableRegisteredInfo", false)) Bukkit.getLogger().info(nameplate + "has been enabled!");
 	}
 
@@ -84,10 +81,6 @@ public class Skore extends JavaPlugin {
 
 	public String getPackageName() {
 		return packageName;
-	}
-
-	public Metrics getMetrics() {
-		return metrics;
 	}
 
 	//Grabs a FileConfiguration of a defined name. The name can't contain .yml in it.
