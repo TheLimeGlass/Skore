@@ -2,7 +2,7 @@ import org.apache.tools.ant.filters.ReplaceTokens
 
 plugins {
     id 'com.github.johnrengelman.shadow' version '8.1.1'
-    id 'io.papermc.paperweight.userdev' version '1.5.10'
+    id 'io.papermc.paperweight.userdev' version '1.7.7'
     id 'xyz.jpenilla.run-paper' version '2.2.2'
     id 'eclipse'
     id 'java'
