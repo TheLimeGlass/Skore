@@ -28,7 +28,7 @@ public class WrapperPlayServerScoreboardObjective extends AbstractPacket {
 			PacketType.Play.Server.SCOREBOARD_OBJECTIVE;
 
 	private static Class<?> renderTypeClass;
-	
+
 	public WrapperPlayServerScoreboardObjective() {
 		super(new PacketContainer(TYPE), TYPE);
 		handle.getModifier().writeDefaults();
@@ -47,7 +47,7 @@ public class WrapperPlayServerScoreboardObjective extends AbstractPacket {
 	 * Retrieve Objective name.
 	 * <p>
 	 * Notes: an unique name for the objective
-	 * 
+	 *
 	 * @return The current Objective name
 	 */
 	public String getName() {
@@ -56,7 +56,7 @@ public class WrapperPlayServerScoreboardObjective extends AbstractPacket {
 
 	/**
 	 * Set Objective name.
-	 * 
+	 *
 	 * @param value - new value.
 	 */
 	public void setName(String value) {
@@ -67,7 +67,7 @@ public class WrapperPlayServerScoreboardObjective extends AbstractPacket {
 	 * Retrieve Objective DisplayName.
 	 * <p>
 	 * Notes: only if mode is 0 or 2. The text to be displayed for the score.
-	 * 
+	 *
 	 * @return The current Objective value
 	 */
 	public WrappedChatComponent getDisplayName() {
@@ -76,7 +76,7 @@ public class WrapperPlayServerScoreboardObjective extends AbstractPacket {
 
 	/**
 	 * Set Objective DisplayName.
-	 * 
+	 *
 	 * @param value - new value.
 	 */
 	public void setDisplayName(WrappedChatComponent value) {
@@ -87,7 +87,7 @@ public class WrapperPlayServerScoreboardObjective extends AbstractPacket {
 	 * Retrieve health display.
 	 * <p>
 	 * Notes: Can be either INTEGER or HEARTS
-	 * 
+	 *
 	 * @return the current health display value
 	 */
 	public RenderType getHealthDisplay() {
@@ -96,7 +96,7 @@ public class WrapperPlayServerScoreboardObjective extends AbstractPacket {
 
 	/**
 	 * Set health display.
-	 * 
+	 *
 	 * @param value - value
 	 * @see #getHealthDisplay()
 	 */
@@ -109,7 +109,7 @@ public class WrapperPlayServerScoreboardObjective extends AbstractPacket {
 	 * <p>
 	 * Notes: 0 to create the scoreboard. 1 to remove the scoreboard. 2 to
 	 * update the display text.
-	 * 
+	 *
 	 * @return The current Mode
 	 */
 	public ObjectiveMode getMode() {
@@ -118,11 +118,27 @@ public class WrapperPlayServerScoreboardObjective extends AbstractPacket {
 
 	/**
 	 * Set Mode.
-	 * 
+	 *
 	 * @param value - new value.
 	 */
 	public void setMode(ObjectiveMode mode) {
 		handle.getIntegers().write(0, mode.ordinal());
+	}
+
+	public boolean hasNumberFormat() {
+		return handle.getBooleans().read(0);
+	}
+
+	public void setHasNumberFormat(boolean hasFormat) {
+		handle.getBooleans().write(0, hasFormat);
+	}
+
+	public NumberFormat getNumberFormat() {
+		return NumberFormat.values()[handle.getIntegers().read(1)];
+	}
+
+	public void setNumberFormat(NumberFormat format) {
+		handle.getIntegers().write(1, format.ordinal());
 	}
 
 	public enum ObjectiveMode {
@@ -131,6 +147,10 @@ public class WrapperPlayServerScoreboardObjective extends AbstractPacket {
 
 	public enum RenderType {
 		INTEGER, HEARTS
+	}
+
+	public enum NumberFormat {
+		BLANK, STYLED, FIXED
 	}
 
 }
